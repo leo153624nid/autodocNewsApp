@@ -14,19 +14,11 @@
 			remoteGlobalIDString = 5C2FD9F32FF631AF00EF888F;
 			remoteInfo = AutodocNewsApp;
 		};
-		5C2FDA152FF631B100EF888F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 5C2FD9EC2FF631AF00EF888F /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 5C2FD9F32FF631AF00EF888F;
-			remoteInfo = AutodocNewsApp;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		5C2FD9F42FF631AF00EF888F /* AutodocNewsApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AutodocNewsApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5C2FDA0A2FF631B100EF888F /* AutodocNewsAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AutodocNewsAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		5C2FDA142FF631B100EF888F /* AutodocNewsAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AutodocNewsAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -53,11 +45,6 @@
 			path = AutodocNewsAppTests;
 			sourceTree = "<group>";
 		};
-		5C2FDA172FF631B100EF888F /* AutodocNewsAppUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = AutodocNewsAppUITests;
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,13 +62,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		5C2FDA112FF631B100EF888F /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -90,7 +70,6 @@
 			children = (
 				5C2FD9F62FF631AF00EF888F /* AutodocNewsApp */,
 				5C2FDA0D2FF631B100EF888F /* AutodocNewsAppTests */,
-				5C2FDA172FF631B100EF888F /* AutodocNewsAppUITests */,
 				5C2FD9F52FF631AF00EF888F /* Products */,
 			);
 			sourceTree = "<group>";
@@ -100,7 +79,6 @@
 			children = (
 				5C2FD9F42FF631AF00EF888F /* AutodocNewsApp.app */,
 				5C2FDA0A2FF631B100EF888F /* AutodocNewsAppTests.xctest */,
-				5C2FDA142FF631B100EF888F /* AutodocNewsAppUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -153,29 +131,6 @@
 			productReference = 5C2FDA0A2FF631B100EF888F /* AutodocNewsAppTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		5C2FDA132FF631B100EF888F /* AutodocNewsAppUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 5C2FDA252FF631B100EF888F /* Build configuration list for PBXNativeTarget "AutodocNewsAppUITests" */;
-			buildPhases = (
-				5C2FDA102FF631B100EF888F /* Sources */,
-				5C2FDA112FF631B100EF888F /* Frameworks */,
-				5C2FDA122FF631B100EF888F /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				5C2FDA162FF631B100EF888F /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				5C2FDA172FF631B100EF888F /* AutodocNewsAppUITests */,
-			);
-			name = AutodocNewsAppUITests;
-			packageProductDependencies = (
-			);
-			productName = AutodocNewsAppUITests;
-			productReference = 5C2FDA142FF631B100EF888F /* AutodocNewsAppUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -190,10 +145,6 @@
 						CreatedOnToolsVersion = 26.5;
 					};
 					5C2FDA092FF631B100EF888F = {
-						CreatedOnToolsVersion = 26.5;
-						TestTargetID = 5C2FD9F32FF631AF00EF888F;
-					};
-					5C2FDA132FF631B100EF888F = {
 						CreatedOnToolsVersion = 26.5;
 						TestTargetID = 5C2FD9F32FF631AF00EF888F;
 					};
@@ -215,7 +166,6 @@
 			targets = (
 				5C2FD9F32FF631AF00EF888F /* AutodocNewsApp */,
 				5C2FDA092FF631B100EF888F /* AutodocNewsAppTests */,
-				5C2FDA132FF631B100EF888F /* AutodocNewsAppUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -229,13 +179,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		5C2FDA082FF631B100EF888F /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		5C2FDA122FF631B100EF888F /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -259,13 +202,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		5C2FDA102FF631B100EF888F /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -273,11 +209,6 @@
 			isa = PBXTargetDependency;
 			target = 5C2FD9F32FF631AF00EF888F /* AutodocNewsApp */;
 			targetProxy = 5C2FDA0B2FF631B100EF888F /* PBXContainerItemProxy */;
-		};
-		5C2FDA162FF631B100EF888F /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 5C2FD9F32FF631AF00EF888F /* AutodocNewsApp */;
-			targetProxy = 5C2FDA152FF631B100EF888F /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -297,6 +228,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -329,6 +261,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -511,46 +444,6 @@
 			};
 			name = Release;
 		};
-		5C2FDA262FF631B100EF888F /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 6K8TWM2B86;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = chaykin.AutodocNewsAppUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = AutodocNewsApp;
-			};
-			name = Debug;
-		};
-		5C2FDA272FF631B100EF888F /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 6K8TWM2B86;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = chaykin.AutodocNewsAppUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = AutodocNewsApp;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -577,15 +470,6 @@
 			buildConfigurations = (
 				5C2FDA232FF631B100EF888F /* Debug */,
 				5C2FDA242FF631B100EF888F /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		5C2FDA252FF631B100EF888F /* Build configuration list for PBXNativeTarget "AutodocNewsAppUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				5C2FDA262FF631B100EF888F /* Debug */,
-				5C2FDA272FF631B100EF888F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
