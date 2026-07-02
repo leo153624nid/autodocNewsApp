@@ -10,7 +10,7 @@ import UIKit
 
 final class NewsListViewController: UIViewController {
 
-    private let viewModel = NewsListViewModel()
+    private let viewModel: NewsListViewModel
     private var cancellables = Set<AnyCancellable>()
 
     private var collectionView: UICollectionView!
@@ -26,19 +26,40 @@ final class NewsListViewController: UIViewController {
     private let refreshControl = UIRefreshControl()
     private weak var footerView: LoadingFooterView?
 
+    // MARK: - Initialization
+
+    init(viewModel: NewsListViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     // MARK: - Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         setupRootView()
         setupCollectionView()
         setupDataSource()
         setupBindings()
-        viewModel.loadInitial()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        viewModel.perform(action: .onAppear)
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        viewModel.perform(action: .onDisappear)
     }
 
-    // Rotate freely on iPad (and iPhone if desired)
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return .all
     }
@@ -52,9 +73,9 @@ final class NewsListViewController: UIViewController {
     }
 
     // MARK: - Setup
-    
+
     private func setupRootView() {
-        title = "Новости"
+        title = "News" // TODO: localize
         view.backgroundColor = .systemGroupedBackground
     }
 
@@ -95,7 +116,7 @@ final class NewsListViewController: UIViewController {
             // 3 columns on wide screens (iPad), 2 on narrow (iPhone)
             let columns: Int = availableWidth > Constants.widthTarget ? 3 : 2
             let columnsF = CGFloat(columns)
-            
+
             let totalInterItemSpacing = cellPadding * 2 * (columnsF - 1)
             let itemWidth = (availableWidth - totalInterItemSpacing - sectionPadding * 2) / columnsF
 
@@ -158,14 +179,14 @@ final class NewsListViewController: UIViewController {
 
         dataSource.supplementaryViewProvider = { [weak self] collectionView, kind, indexPath in
             guard kind == UICollectionView.elementKindSectionFooter else { return nil }
-            
+
             let footer = collectionView.dequeueReusableSupplementaryView(
                 ofKind: kind,
                 withReuseIdentifier: LoadingFooterView.reuseIdentifier,
                 for: indexPath
             ) as? LoadingFooterView
             self?.footerView = footer
-            
+
             return footer
         }
     }
@@ -214,7 +235,7 @@ final class NewsListViewController: UIViewController {
         dataSource.apply(snapshot, animatingDifferences: true)
     }
 
-    private func showError(_ error: NetworkError) {
+    private func showError(_ error: NetworkError) { // TODO: localize
         let alert = UIAlertController(
             title: "Error",
             message: error.localizedDescription,
@@ -222,29 +243,15 @@ final class NewsListViewController: UIViewController {
         )
         alert.addAction(UIAlertAction(title: "Retry",
                                       style: .default) { [weak self] _ in
-            self?.viewModel.refresh()
+            self?.viewModel.perform(action: .pullToRefresh)
         })
-        alert.addAction(UIAlertAction(title: "Cancel",
-                                      style: .cancel))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        
         present(alert, animated: true)
     }
 
     @objc private func handleRefresh() {
-        viewModel.refresh()
-    }
-}
-
-// MARK: - Child types
-private extension NewsListViewController {
-    
-    enum Section {
-        case main
-    }
-    
-    struct Constants {
-        static let cellEstimateHeight: CGFloat = 220
-        static let cellPadding: CGFloat = 6
-        static let widthTarget: CGFloat = 600
+        viewModel.perform(action: .pullToRefresh)
     }
 }
 
@@ -255,24 +262,33 @@ extension NewsListViewController: UICollectionViewDelegate {
                         didSelectItemAt indexPath: IndexPath) {
         
         collectionView.deselectItem(at: indexPath, animated: true)
-        guard let item = dataSource.itemIdentifier(for: indexPath),
-              let urlString = item.fullUrl,
-              let url = URL(string: urlString) else { return }
-        
-        let webVC = NewsWebViewController(url: url,
-                                          title: item.title)
-        navigationController?.pushViewController(webVC, animated: true)
+        guard let item = dataSource.itemIdentifier(for: indexPath) else { return }
+        viewModel.perform(action: .selectItem(item))
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let offsetY = scrollView.contentOffset.y
         let contentHeight = scrollView.contentSize.height
         let frameHeight = scrollView.frame.height
-        
         // Trigger next page load when user is 200pt from the bottom
+
         if contentHeight > 0,
            offsetY > contentHeight - frameHeight - 200 {
-            viewModel.loadNextPage()
+            viewModel.perform(action: .loadMore)
         }
+    }
+}
+
+// MARK: - Child types
+private extension NewsListViewController {
+
+    enum Section {
+        case main
+    }
+
+    struct Constants {
+        static let cellEstimateHeight: CGFloat = 220
+        static let cellPadding: CGFloat = 6
+        static let widthTarget: CGFloat = 600
     }
 }

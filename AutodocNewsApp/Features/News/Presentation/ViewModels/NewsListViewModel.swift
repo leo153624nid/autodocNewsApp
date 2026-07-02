@@ -8,8 +8,18 @@
 import Combine
 import Foundation
 
-@MainActor
-final class NewsListViewModel {
+/// Actions from NewsList view.
+enum NewsListViewAction {
+    case selectItem(NewsItem)
+    case pullToRefresh
+    case loadMore
+    case onAppear
+    case onDisappear
+}
+
+final class NewsListViewModel: ViewModel {
+
+    unowned let coordinator: any NewsTabCoordinatorProtocol
 
     enum State {
         case idle
@@ -20,6 +30,7 @@ final class NewsListViewModel {
     }
 
     @Published private(set) var state: State = .idle
+    private var isViewAppeared = false
 
     @Injected private var newsRepository: NewsRepository
     private var currentPage = 1
@@ -30,11 +41,39 @@ final class NewsListViewModel {
         allItems.count < totalCount
     }
 
-    init() { // TODO: add coordinator
-        
+    // MARK: - Initialization
+
+    init(coordinator: any NewsTabCoordinatorProtocol) {
+        self.coordinator = coordinator
     }
 
-    func loadInitial() {
+    // MARK: - ViewModel
+
+    func perform(action: NewsListViewAction) {
+        switch action {
+        case .selectItem(let item):
+            guard let urlString = item.fullUrl,
+                  let url = URL(string: urlString) else { return }
+            coordinator.showNewsDetail(url: url, title: item.title)
+
+        case .pullToRefresh:
+            refresh()
+
+        case .loadMore:
+            loadNextPage()
+
+        case .onAppear:
+            isViewAppeared = true
+            if case .idle = state { loadInitial() }
+
+        case .onDisappear:
+            isViewAppeared = false
+        }
+    }
+
+    // MARK: - Private
+
+    private func loadInitial() {
         currentPage = 1
         allItems = []
         totalCount = 0
@@ -42,23 +81,23 @@ final class NewsListViewModel {
         fetch(page: currentPage)
     }
 
-    func loadNextPage() {
+    private func loadNextPage() {
         guard case .loaded = state, canLoadMore else { return }
         
         state = .loadingMore(allItems)
         fetch(page: currentPage)
     }
 
-    func refresh() {
+    private func refresh() {
         loadInitial()
     }
 
     private func fetch(page: Int) {
         Task { [weak self] in
             guard let self else { return }
-            
+
             let result = await newsRepository.fetchNews(page: page)
-            
+
             switch result {
             case .success(let feed):
                 totalCount = feed.totalCount
