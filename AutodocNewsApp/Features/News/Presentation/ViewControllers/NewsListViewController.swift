@@ -24,6 +24,7 @@ final class NewsListViewController: UIViewController {
     }()
 
     private let refreshControl = UIRefreshControl()
+    private weak var footerView: LoadingFooterView?
 
     // MARK: - Lifecycle
 
@@ -65,6 +66,9 @@ final class NewsListViewController: UIViewController {
         collectionView.backgroundColor = .clear
         collectionView.register(NewsCell.self,
                                 forCellWithReuseIdentifier: NewsCell.reuseIdentifier)
+        collectionView.register(LoadingFooterView.self,
+                                forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
+                                withReuseIdentifier: LoadingFooterView.reuseIdentifier)
 
         refreshControl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
         collectionView.refreshControl = refreshControl
@@ -85,25 +89,53 @@ final class NewsListViewController: UIViewController {
 
     private func makeLayout() -> UICollectionViewLayout {
         UICollectionViewCompositionalLayout { _, environment in
+            let cellPadding = Constants.cellPadding
+            let sectionPadding = Constants.cellPadding * 2
             let availableWidth = environment.container.effectiveContentSize.width
             // 3 columns on wide screens (iPad), 2 on narrow (iPhone)
-            let columns: Int = availableWidth > 600 ? 3 : 2
+            let columns: Int = availableWidth > Constants.widthTarget ? 3 : 2
+            let columnsF = CGFloat(columns)
+            
+            let totalInterItemSpacing = cellPadding * 2 * (columnsF - 1)
+            let itemWidth = (availableWidth - totalInterItemSpacing - sectionPadding * 2) / columnsF
 
-            let itemSize = NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(1.0 / CGFloat(columns)),
-                heightDimension: .estimated(220)
-            )
+            let itemSize = if #available(iOS 17.0, *) {
+                NSCollectionLayoutSize(
+                    widthDimension: .absolute(itemWidth),
+                    heightDimension: .uniformAcrossSiblings(estimate: Constants.cellEstimateHeight)
+                )
+            } else {
+                NSCollectionLayoutSize(
+                    widthDimension: .absolute(itemWidth),
+                    heightDimension: .estimated(Constants.cellEstimateHeight)
+                )
+            }
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
-            item.contentInsets = NSDirectionalEdgeInsets(top: 6, leading: 6, bottom: 6, trailing: 6)
 
             let groupSize = NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
-                heightDimension: .estimated(220)
+                heightDimension: .estimated(Constants.cellEstimateHeight)
             )
-            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize,
+                                                           subitems: [item])
+            group.interItemSpacing = .fixed(2 * cellPadding)
 
             let section = NSCollectionLayoutSection(group: group)
-            section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8)
+            section.contentInsets = NSDirectionalEdgeInsets(top: sectionPadding,
+                                                            leading: sectionPadding,
+                                                            bottom: sectionPadding,
+                                                            trailing: sectionPadding)
+            section.interGroupSpacing = 2 * cellPadding
+
+            let footerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                    heightDimension: .absolute(50))
+            let footer = NSCollectionLayoutBoundarySupplementaryItem(
+                layoutSize: footerSize,
+                elementKind: UICollectionView.elementKindSectionFooter,
+                alignment: .bottom
+            )
+            section.boundarySupplementaryItems = [footer]
+
             return section
         }
     }
@@ -112,16 +144,29 @@ final class NewsListViewController: UIViewController {
         dataSource = UICollectionViewDiffableDataSource<Section, NewsItem>(
             collectionView: collectionView
         ) { collectionView, indexPath, item in
-            
+
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NewsCell.reuseIdentifier,
                                                           for: indexPath) as? NewsCell
-            
+
             guard let cell else {
                 return UICollectionViewCell() // TODO: maybe return fatal error?
             }
-            
+
             cell.configure(with: item)
             return cell
+        }
+
+        dataSource.supplementaryViewProvider = { [weak self] collectionView, kind, indexPath in
+            guard kind == UICollectionView.elementKindSectionFooter else { return nil }
+            
+            let footer = collectionView.dequeueReusableSupplementaryView(
+                ofKind: kind,
+                withReuseIdentifier: LoadingFooterView.reuseIdentifier,
+                for: indexPath
+            ) as? LoadingFooterView
+            self?.footerView = footer
+            
+            return footer
         }
     }
 
@@ -147,15 +192,17 @@ final class NewsListViewController: UIViewController {
         case .loaded(let items):
             activityIndicator.stopAnimating()
             refreshControl.endRefreshing()
+            footerView?.stopAnimating()
             applySnapshot(items)
 
         case .loadingMore(let items):
-            // Items already shown; snapshot stays; spinner on bottom cell handled by scroll
+            footerView?.startAnimating()
             applySnapshot(items)
 
         case .error(let error):
             activityIndicator.stopAnimating()
             refreshControl.endRefreshing()
+            footerView?.stopAnimating()
             showError(error)
         }
     }
@@ -187,6 +234,20 @@ final class NewsListViewController: UIViewController {
     }
 }
 
+// MARK: - Child types
+private extension NewsListViewController {
+    
+    enum Section {
+        case main
+    }
+    
+    struct Constants {
+        static let cellEstimateHeight: CGFloat = 220
+        static let cellPadding: CGFloat = 6
+        static let widthTarget: CGFloat = 600
+    }
+}
+
 // MARK: - UICollectionViewDelegate
 extension NewsListViewController: UICollectionViewDelegate {
 
@@ -213,19 +274,5 @@ extension NewsListViewController: UICollectionViewDelegate {
            offsetY > contentHeight - frameHeight - 200 {
             viewModel.loadNextPage()
         }
-    }
-}
-
-// MARK: - Child types
-private extension NewsListViewController {
-    
-    enum Section {
-        case main
-    }
-    
-    struct Constants {
-        static let cellEstimateHeight: CGFloat = 220
-        static let cellPadding: CGFloat = 6
-        static let widthTarget: CGFloat = 600
     }
 }

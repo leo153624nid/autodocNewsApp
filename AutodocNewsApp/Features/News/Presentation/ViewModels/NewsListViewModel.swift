@@ -21,7 +21,7 @@ final class NewsListViewModel {
 
     @Published private(set) var state: State = .idle
 
-    private let repository: NewsRepositoryProtocol
+    private let repository: NewsRepository
     private var currentPage = 1
     private let perPage = 15
     private var totalCount = 0
@@ -31,7 +31,7 @@ final class NewsListViewModel {
         allItems.count < totalCount
     }
 
-    init(repository: NewsRepositoryProtocol = NewsRepository()) {
+    init(repository: NewsRepository = NewsRepositoryImpl()) {
         self.repository = repository
     }
 
