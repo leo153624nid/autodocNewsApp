@@ -1,0 +1,53 @@
+included:
+  - AutodocNewsApp
+
+excluded:
+  - AutodocNewsApp/AutodocNewsApp/Resources
+  - SwiftLintPlugins
+
+opt_in_rules:
+  - closure_spacing
+  - collection_alignment
+  - contains_over_first_not_nil
+  - empty_count
+  - empty_string
+  - explicit_init
+  - first_where
+  - last_where
+  - operator_usage_whitespace
+  - overridden_super_call
+  - pattern_matching_keywords
+  - redundant_nil_coalescing
+  - redundant_type_annotation
+  - sorted_imports
+  - unneeded_parentheses_in_closure_argument
+  - yoda_condition
+
+disabled_rules:
+  - trailing_whitespace
+  - implicit_optional_initialization
+
+line_length:
+  warning: 120
+  error: 160
+
+type_body_length:
+  warning: 300
+  error: 500
+
+file_length:
+  warning: 500
+  error: 800
+
+function_body_length:
+  warning: 50
+  error: 100
+
+function_parameter_count:
+  warning: 6
+  error: 8
+
+cyclomatic_complexity:
+  warning: 10
+  error: 20
+  ignores_case_statements: true
