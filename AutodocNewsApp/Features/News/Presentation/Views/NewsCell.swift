@@ -23,9 +23,9 @@ final class NewsCell: UICollectionViewCell {
         return view
     }()
 
-    private let titleLabel: UILabel = {
-        let label = UILabel()
-        label.numberOfLines = 3
+    private let titleLabel: TopAlignedLabel = {
+        let label = TopAlignedLabel()
+        label.numberOfLines = 2
         label.font = .systemFont(ofSize: 16, weight: .medium)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -67,6 +67,7 @@ final class NewsCell: UICollectionViewCell {
             titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 8),
             titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
             titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
+            titleLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: 40),
             
             dateLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
             dateLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),

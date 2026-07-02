@@ -214,17 +214,17 @@ final class NewsListViewController: UIViewController {
         dataSource.apply(snapshot, animatingDifferences: true)
     }
 
-    private func showError(_ error: Error) {
+    private func showError(_ error: NetworkError) {
         let alert = UIAlertController(
-            title: "Ошибка загрузки",
+            title: "Error",
             message: error.localizedDescription,
             preferredStyle: .alert
         )
-        alert.addAction(UIAlertAction(title: "Повторить",
+        alert.addAction(UIAlertAction(title: "Retry",
                                       style: .default) { [weak self] _ in
             self?.viewModel.refresh()
         })
-        alert.addAction(UIAlertAction(title: "Отмена",
+        alert.addAction(UIAlertAction(title: "Cancel",
                                       style: .cancel))
         present(alert, animated: true)
     }

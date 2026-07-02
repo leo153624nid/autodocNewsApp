@@ -9,7 +9,6 @@ import Foundation
 
 protocol NewsRepository {
     
-    func fetchNews(page: Int,
-                   perPage: Int) async throws -> NewsFeed
+    func fetchNews(page: Int) async -> Result<NewsFeed, NetworkError>
     
 }

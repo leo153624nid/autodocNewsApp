@@ -18,7 +18,7 @@ struct NewsResponseDTO: Decodable {
 }
 
 struct NewsItemDTO: Decodable {
-    let id: Int
+    let id: Int64
     let title: String
     let titleImageUrl: String?
     let fullUrl: String?
@@ -32,11 +32,4 @@ struct NewsItemDTO: Decodable {
         case publishedDate
     }
 
-    func toDomain() -> NewsItem { // TODO: maybe use mapper?
-        NewsItem(id: id,
-                 title: title,
-                 titleImageUrl: titleImageUrl,
-                 fullUrl: fullUrl,
-                 publishedDate: publishedDate?.isoStringToDate())
-    }
 }

@@ -8,7 +8,7 @@
 import Foundation
 
 struct NewsItem: Hashable, Sendable {
-    let id: Int
+    let id: Int64
     let title: String
     let titleImageUrl: String?
     let fullUrl: String?

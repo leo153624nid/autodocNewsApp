@@ -16,14 +16,13 @@ final class NewsListViewModel {
         case loading
         case loaded([NewsItem])
         case loadingMore([NewsItem])
-        case error(Error)
+        case error(NetworkError)
     }
 
     @Published private(set) var state: State = .idle
 
-    private let repository: NewsRepository
+    @Injected private var newsRepository: NewsRepository
     private var currentPage = 1
-    private let perPage = 15
     private var totalCount = 0
     private var allItems: [NewsItem] = []
 
@@ -31,8 +30,8 @@ final class NewsListViewModel {
         allItems.count < totalCount
     }
 
-    init(repository: NewsRepository = NewsRepositoryImpl()) {
-        self.repository = repository
+    init() { // TODO: add coordinator
+        
     }
 
     func loadInitial() {
@@ -58,14 +57,15 @@ final class NewsListViewModel {
         Task { [weak self] in
             guard let self else { return }
             
-            do {
-                let feed = try await repository.fetchNews(page: page,
-                                                          perPage: perPage)
+            let result = await newsRepository.fetchNews(page: page)
+            
+            switch result {
+            case .success(let feed):
                 totalCount = feed.totalCount
                 allItems += feed.items
                 currentPage += 1
                 state = .loaded(allItems)
-            } catch {
+            case .failure(let error):
                 switch state {
                 case .loadingMore(let existing):
                     state = .loaded(existing)

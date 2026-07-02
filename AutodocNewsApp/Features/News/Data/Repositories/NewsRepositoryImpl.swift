@@ -9,19 +9,24 @@ import Foundation
 
 final class NewsRepositoryImpl: NewsRepository {
     
-    private let service: NewsAPIService
+    private let service: NewsAPI
+    private let mapper = NewsMapper()
 
-    init(service: NewsAPIService = .shared) {
+    init(service: NewsAPI) {
         self.service = service
     }
 
-    func fetchNews(page: Int,
-                   perPage: Int) async throws -> NewsFeed {
-        let dto = try await service.fetch(page: page,
-                                          perPage: perPage)
+    func fetchNews(page: Int) async -> Result<NewsFeed, NetworkError> {
+        let result = await service.fetch(page: page)
         
-        return NewsFeed(items: dto.news.map { $0.toDomain() },
-                        totalCount: dto.totalCount)
+        switch result {
+        case .success(let dto):
+            let items: [NewsItem] = mapper.toDomain(dto.news)
+            return .success(NewsFeed(items: items,
+                                     totalCount: dto.totalCount))
+        case .failure(let error):
+            return .failure(error)
+        }
     }
     
 }
