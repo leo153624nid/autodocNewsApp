@@ -8,24 +8,34 @@
 import UIKit
 
 final class NewsCell: UICollectionViewCell {
+    
     static let reuseIdentifier = "NewsCell"
 
-    private var imageTask: Task<Void, Never>?
     private var currentUrlString: String?
+    private var imageTask: Task<Void, Never>?
 
     private let imageView: UIImageView = {
-        let iv = UIImageView()
-        iv.contentMode = .scaleAspectFill
-        iv.clipsToBounds = true
-        iv.backgroundColor = .systemGray5
-        iv.translatesAutoresizingMaskIntoConstraints = false
-        return iv
+        let view = UIImageView()
+        view.contentMode = .scaleAspectFill
+        view.clipsToBounds = true
+        view.backgroundColor = .systemGray5
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
 
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 3
-        label.font = .systemFont(ofSize: 14, weight: .medium)
+        label.font = .systemFont(ofSize: 16, weight: .medium)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private let dateLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 1
+        label.font = .systemFont(ofSize: 14, weight: .regular)
+        label.textColor = .secondaryLabel
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -46,6 +56,7 @@ final class NewsCell: UICollectionViewCell {
 
         contentView.addSubview(imageView)
         contentView.addSubview(titleLabel)
+        contentView.addSubview(dateLabel)
 
         NSLayoutConstraint.activate([
             imageView.topAnchor.constraint(equalTo: contentView.topAnchor),
@@ -56,12 +67,17 @@ final class NewsCell: UICollectionViewCell {
             titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 8),
             titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
             titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
-            titleLabel.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -8)
+            
+            dateLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
+            dateLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
+            dateLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
+            dateLabel.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -8)
         ])
     }
 
     func configure(with item: NewsItem) {
         titleLabel.text = item.title
+        dateLabel.text = item.publishedDate?.toSectionHeaderString() ?? "No date"
 
         // Cancel any in-flight image load before starting a new one
         imageTask?.cancel()
@@ -74,8 +90,10 @@ final class NewsCell: UICollectionViewCell {
 
         imageTask = Task { [weak self] in
             let image = await ImageLoader.shared.loadImage(from: urlString)
-            // Guard against cell reuse: only apply if this cell still shows the same URL
-            guard !Task.isCancelled, self?.currentUrlString == urlString else { return }
+            
+            guard !Task.isCancelled,
+                  self?.currentUrlString == urlString else { return }
+            
             await MainActor.run {
                 self?.imageView.image = image
             }
@@ -89,5 +107,7 @@ final class NewsCell: UICollectionViewCell {
         currentUrlString = nil
         imageView.image = nil
         titleLabel.text = nil
+        dateLabel.text = nil
     }
+    
 }

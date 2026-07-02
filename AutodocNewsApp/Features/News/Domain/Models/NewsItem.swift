@@ -12,4 +12,5 @@ struct NewsItem: Hashable, Sendable {
     let title: String
     let titleImageUrl: String?
     let fullUrl: String?
+    let publishedDate: Date?
 }

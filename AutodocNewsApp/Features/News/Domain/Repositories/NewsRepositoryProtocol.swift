@@ -8,5 +8,8 @@
 import Foundation
 
 protocol NewsRepositoryProtocol {
-    func fetchNews(page: Int, perPage: Int) async throws -> NewsFeed
+    
+    func fetchNews(page: Int,
+                   perPage: Int) async throws -> NewsFeed
+    
 }

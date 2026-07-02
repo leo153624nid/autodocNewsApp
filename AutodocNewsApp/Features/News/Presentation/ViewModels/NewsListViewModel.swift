@@ -5,9 +5,10 @@
 //  Created by A Ch on 02.07.2026.
 //
 
-import Foundation
 import Combine
+import Foundation
 
+@MainActor
 final class NewsListViewModel {
 
     enum State {
@@ -44,6 +45,7 @@ final class NewsListViewModel {
 
     func loadNextPage() {
         guard case .loaded = state, canLoadMore else { return }
+        
         state = .loadingMore(allItems)
         fetch(page: currentPage)
     }
@@ -53,10 +55,12 @@ final class NewsListViewModel {
     }
 
     private func fetch(page: Int) {
-        Task { @MainActor [weak self] in
+        Task { [weak self] in
             guard let self else { return }
+            
             do {
-                let feed = try await repository.fetchNews(page: page, perPage: perPage)
+                let feed = try await repository.fetchNews(page: page,
+                                                          perPage: perPage)
                 totalCount = feed.totalCount
                 allItems += feed.items
                 currentPage += 1
@@ -71,4 +75,5 @@ final class NewsListViewModel {
             }
         }
     }
+    
 }

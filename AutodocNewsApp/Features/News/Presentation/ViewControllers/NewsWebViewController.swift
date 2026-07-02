@@ -27,9 +27,12 @@ final class NewsWebViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         view.backgroundColor = .systemBackground
+        
         setupWebView()
         setupProgressView()
+        
         webView.load(URLRequest(url: url))
     }
 
@@ -63,7 +66,8 @@ final class NewsWebViewController: UIViewController {
             progressView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
 
-        progressObservation = webView.observe(\.estimatedProgress, options: .new) { [weak self] webView, _ in
+        progressObservation = webView.observe(\.estimatedProgress,
+                                               options: .new) { [weak self] webView, _ in
             DispatchQueue.main.async {
                 let progress = Float(webView.estimatedProgress)
                 self?.progressView.setProgress(progress, animated: true)
