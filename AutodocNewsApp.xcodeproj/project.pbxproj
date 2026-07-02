@@ -25,7 +25,7 @@
 		5C2FDA1C2FF631B100EF888F /* Exceptions for "AutodocNewsApp" folder in "AutodocNewsApp" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Info.plist,
+				Resources/Info.plist,
 			);
 			target = 5C2FD9F32FF631AF00EF888F /* AutodocNewsApp */;
 		};
@@ -235,7 +235,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6K8TWM2B86;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = AutodocNewsApp/Info.plist;
+				INFOPLIST_FILE = AutodocNewsApp/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -268,7 +268,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6K8TWM2B86;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = AutodocNewsApp/Info.plist;
+				INFOPLIST_FILE = AutodocNewsApp/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;

@@ -54,7 +54,8 @@ final class NewsListViewModel: ViewModel {
         case .selectItem(let item):
             guard let urlString = item.fullUrl,
                   let url = URL(string: urlString) else { return }
-            coordinator.showNewsDetail(url: url, title: item.title)
+            coordinator.showNewsDetail(url: url,
+                                       title: item.title)
 
         case .pullToRefresh:
             refresh()
