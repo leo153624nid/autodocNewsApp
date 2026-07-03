@@ -10,7 +10,6 @@ import UIKit
 final class ImageLoader {
     static let shared = ImageLoader() // TODO: DI
 
-    // NSCache persists across app backgrounding (only cleared on memory pressure)
     private let cache = NSCache<NSString, UIImage>()
 
     private init() {

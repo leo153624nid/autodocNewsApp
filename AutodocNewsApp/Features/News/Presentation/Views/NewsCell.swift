@@ -23,6 +23,21 @@ final class NewsCell: UICollectionViewCell {
         return view
     }()
 
+    private let imageSpinner: UIActivityIndicatorView = {
+        let spinner = UIActivityIndicatorView(style: .medium)
+        spinner.hidesWhenStopped = true
+        spinner.translatesAutoresizingMaskIntoConstraints = false
+        return spinner
+    }()
+
+    private let placeholderIconView: UIImageView = {
+        let view = UIImageView(image: UIImage(named: "imagePlaceholder"))
+        view.contentMode = .scaleAspectFit
+        view.tintColor = .systemGray3
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+
     private let titleLabel: TopAlignedLabel = {
         let label = TopAlignedLabel()
         label.numberOfLines = 2
@@ -39,7 +54,7 @@ final class NewsCell: UICollectionViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
@@ -55,6 +70,8 @@ final class NewsCell: UICollectionViewCell {
         contentView.layer.masksToBounds = true
 
         contentView.addSubview(imageView)
+        contentView.addSubview(placeholderIconView)
+        contentView.addSubview(imageSpinner)
         contentView.addSubview(titleLabel)
         contentView.addSubview(dateLabel)
 
@@ -63,6 +80,14 @@ final class NewsCell: UICollectionViewCell {
             imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             imageView.heightAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.6),
+
+            placeholderIconView.centerXAnchor.constraint(equalTo: imageView.centerXAnchor),
+            placeholderIconView.centerYAnchor.constraint(equalTo: imageView.centerYAnchor),
+            placeholderIconView.widthAnchor.constraint(equalToConstant: 96),
+            placeholderIconView.heightAnchor.constraint(equalToConstant: 96),
+
+            imageSpinner.centerXAnchor.constraint(equalTo: imageView.centerXAnchor),
+            imageSpinner.centerYAnchor.constraint(equalTo: imageView.centerYAnchor),
 
             titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 8),
             titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
@@ -83,20 +108,31 @@ final class NewsCell: UICollectionViewCell {
         // Cancel any in-flight image load before starting a new one
         imageTask?.cancel()
         imageView.image = nil
+        imageSpinner.stopAnimating()
 
         let urlString = item.titleImageUrl ?? ""
         currentUrlString = urlString
 
-        guard !urlString.isEmpty else { return }
+        guard !urlString.isEmpty else {
+            placeholderIconView.isHidden = false
+            return
+        }
 
+        placeholderIconView.isHidden = true
+        imageSpinner.startAnimating()
         imageTask = Task { [weak self] in
             let image = await ImageLoader.shared.loadImage(from: urlString)
-            
+
             guard !Task.isCancelled,
                   self?.currentUrlString == urlString else { return }
-            
+
             await MainActor.run {
-                self?.imageView.image = image
+                self?.imageSpinner.stopAnimating()
+                if let image {
+                    self?.imageView.image = image
+                } else {
+                    self?.placeholderIconView.isHidden = false
+                }
             }
         }
     }
@@ -107,6 +143,8 @@ final class NewsCell: UICollectionViewCell {
         imageTask = nil
         currentUrlString = nil
         imageView.image = nil
+        imageSpinner.stopAnimating()
+        placeholderIconView.isHidden = true
         titleLabel.text = nil
         dateLabel.text = nil
     }

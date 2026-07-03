@@ -170,7 +170,7 @@ final class NewsListViewController: UIViewController {
                                                           for: indexPath) as? NewsCell
 
             guard let cell else {
-                return UICollectionViewCell() // TODO: maybe return fatal error?
+                return UICollectionViewCell()
             }
 
             cell.configure(with: item)
@@ -218,7 +218,6 @@ final class NewsListViewController: UIViewController {
 
         case .loadingMore(let items):
             footerView?.startAnimating()
-            applySnapshot(items)
 
         case .error(let error):
             activityIndicator.stopAnimating()
