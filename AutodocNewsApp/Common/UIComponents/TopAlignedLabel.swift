@@ -7,6 +7,7 @@
 
 import UIKit
 
+/// UILabel subclass that always renders text top-aligned within its bounds.
 final class TopAlignedLabel: UILabel {
     
     override func drawText(in rect: CGRect) {

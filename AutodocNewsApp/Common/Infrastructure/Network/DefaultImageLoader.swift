@@ -7,6 +7,7 @@
 
 import UIKit
 
+/// Default ImageLoader backed by URLSession with an in-memory NSCache.
 final class DefaultImageLoader: ImageLoader {
 
     private let cache = NSCache<NSString, UIImage>()
@@ -16,6 +17,9 @@ final class DefaultImageLoader: ImageLoader {
         cache.totalCostLimit = 100 * 1024 * 1024 // 100 MB
     }
 
+    /// Returns a cached image or downloads, decodes, and caches it.
+    /// - Parameter urlString: Remote image URL string.
+    /// - Returns: Loaded image, or `nil` on failure.
     func loadImage(from urlString: String) async -> UIImage? {
         let key = urlString as NSString
 

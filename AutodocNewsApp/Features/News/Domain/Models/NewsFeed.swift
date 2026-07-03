@@ -7,7 +7,10 @@
 
 import Foundation
 
+/// Domain model representing one page of news.
 struct NewsFeed {
+    /// News items on this page.
     let items: [NewsItem]
+    /// Total number of articles available on the server.
     let totalCount: Int
 }

@@ -10,25 +10,39 @@ import Foundation
 
 /// Actions from NewsList view.
 enum NewsListViewAction {
+    /// User tapped a news item.
     case selectItem(NewsItem)
+    /// User pulled to refresh.
     case pullToRefresh
+    /// Collection view scrolled near the bottom.
     case loadMore
+    /// View appeared on screen.
     case onAppear
+    /// View disappeared from screen.
     case onDisappear
 }
 
+/// ViewModel for the news list screen.
 final class NewsListViewModel: ViewModel {
 
+    /// Coordinator that handles News navigation.
     unowned let coordinator: any NewsTabCoordinatorProtocol
 
+    /// Loading states of the news list.
     enum State {
+        /// No data, no active request.
         case idle
+        /// Initial page load in progress.
         case loading
+        /// Items available; no active request.
         case loaded([NewsItem])
+        /// Next page loading while existing items are shown.
         case loadingMore([NewsItem])
+        /// Request failed.
         case error(NetworkError)
     }
 
+    /// Current loading state, published to drive the UI.
     @Published private(set) var state: State = .idle
     private var isViewAppeared = false
 
@@ -44,12 +58,16 @@ final class NewsListViewModel: ViewModel {
 
     // MARK: - Initialization
 
+    /// Creates the view model.
+    /// - Parameter coordinator: News tab coordinator.
     init(coordinator: any NewsTabCoordinatorProtocol) {
         self.coordinator = coordinator
     }
 
     // MARK: - ViewModel
 
+    /// Handles a news list view action.
+    /// - Parameter action: Action triggered by the view.
     func perform(action: NewsListViewAction) {
         switch action {
         case .selectItem(let item):

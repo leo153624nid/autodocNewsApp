@@ -8,7 +8,8 @@
 import Foundation
 
 extension Date {
-    /// Date string with local time
+    /// ISO 8601 date string using the device's local time zone.
+    /// - Returns: Formatted date string (e.g. `2026-07-03T12:00:00+03:00`).
     func isoString() -> String {
         let formatter = DateFormatter()
         formatter.calendar = Calendar(identifier: .iso8601)
@@ -19,7 +20,8 @@ extension Date {
         return formatter.string(from: self)
     }
     
-    /// Date string UTC
+    /// ISO 8601 date string in UTC.
+    /// - Returns: Formatted date string (e.g. `2026-07-03T09:00:00Z`).
     func isoStringUTC() -> String {
         let formatter = DateFormatter()
         formatter.calendar = Calendar(identifier: .iso8601)

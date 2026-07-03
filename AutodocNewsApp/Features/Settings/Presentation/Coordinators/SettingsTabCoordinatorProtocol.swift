@@ -7,5 +7,6 @@
 
 import Foundation
 
+/// Coordinator contract for the Settings tab.
 @MainActor
 protocol SettingsTabCoordinatorProtocol: Coordinator {}

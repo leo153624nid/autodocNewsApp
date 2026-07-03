@@ -7,8 +7,10 @@
 
 import UIKit
 
+/// Collection view cell that shows a news article thumbnail, title, and date.
 final class NewsCell: UICollectionViewCell {
-    
+
+    /// Reuse identifier for dequeuing.
     static let reuseIdentifier = "NewsCell"
 
     @InjectedLazy private var imageLoader: ImageLoader
@@ -103,6 +105,8 @@ final class NewsCell: UICollectionViewCell {
         ])
     }
 
+    /// Populates the cell with article data and starts the image load.
+    /// - Parameter item: News article to display.
     func configure(with item: NewsItem) {
         titleLabel.text = item.title
         dateLabel.text = item.publishedDate?.toSectionHeaderString() ?? "news.cell.no_date".localized

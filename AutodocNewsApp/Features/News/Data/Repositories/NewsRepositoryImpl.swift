@@ -7,15 +7,21 @@
 
 import Foundation
 
+/// Default NewsRepository that maps DTOs to domain models.
 final class NewsRepositoryImpl: NewsRepository {
     
     private let service: NewsAPI
     private let mapper = NewsMapper()
 
+    /// Creates the repository.
+    /// - Parameter service: News API data source.
     init(service: NewsAPI) {
         self.service = service
     }
 
+    /// Fetches a page of news and maps the response to domain models.
+    /// - Parameter page: 1-based page number.
+    /// - Returns: Feed with items and total count, or a network error.
     func fetchNews(page: Int) async -> Result<NewsFeed, NetworkError> {
         let result = await service.fetch(page: page)
         

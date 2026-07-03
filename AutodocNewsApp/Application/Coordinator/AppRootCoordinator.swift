@@ -12,8 +12,11 @@ import UIKit
 @MainActor
 final class AppRootCoordinator: RootCoordinator {
 
+    /// Root tab bar controller hosting all tabs.
     private(set) var tabBarController = AppRootTabBarController()
+    /// Coordinator for the News tab.
     private(set) var newsCoordinator: NewsTabCoordinator!
+    /// Coordinator for the Settings tab.
     private(set) var settingsCoordinator: SettingsTabCoordinator!
 
     init() {
@@ -22,6 +25,8 @@ final class AppRootCoordinator: RootCoordinator {
 
     // MARK: - RootCoordinator
 
+    /// Switches the tab bar to the specified tab.
+    /// - Parameter tab: Tab to select.
     func showTab(_ tab: AppTab) {
         switch tab {
         case .news: tabBarController.selectedIndex = 0

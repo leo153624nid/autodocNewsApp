@@ -7,8 +7,10 @@
 
 import UIKit
 
+/// Collection view footer that shows a loading spinner during pagination.
 final class LoadingFooterView: UICollectionReusableView {
 
+    /// Reuse identifier for dequeuing.
     static let reuseIdentifier = "LoadingFooterView"
 
     private let spinner: UIActivityIndicatorView = {
@@ -31,10 +33,12 @@ final class LoadingFooterView: UICollectionReusableView {
         fatalError("init(coder:) has not been implemented")
     }
 
+    /// Starts the loading animation.
     func startAnimating() {
         spinner.startAnimating()
     }
 
+    /// Stops the loading animation.
     func stopAnimating() {
         spinner.stopAnimating()
     }

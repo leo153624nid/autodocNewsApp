@@ -8,6 +8,7 @@
 import UIKit
 import WebKit
 
+/// View controller that renders an article URL in a WKWebView.
 final class NewsWebViewController: UIViewController {
 
     private let url: URL
@@ -15,6 +16,10 @@ final class NewsWebViewController: UIViewController {
     private let progressView = UIProgressView(progressViewStyle: .bar)
     private var progressObservation: NSKeyValueObservation?
 
+    /// Creates the web view controller.
+    /// - Parameters:
+    ///   - url: Article URL to load.
+    ///   - title: Navigation bar title.
     init(url: URL, title: String) {
         self.url = url
         super.init(nibName: nil, bundle: nil)

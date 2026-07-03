@@ -8,6 +8,7 @@
 import Combine
 import UIKit
 
+/// View controller that displays the paginated news grid.
 final class NewsListViewController: UIViewController {
 
     private let viewModel: NewsListViewModel

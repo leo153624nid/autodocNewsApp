@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Concrete NewsAPI implementation backed by NetworkService.
 final class NewsAPIService: NewsAPI {
     
     private let networkService: NetworkService
@@ -14,11 +15,15 @@ final class NewsAPIService: NewsAPI {
     // MARK: - Public methods
 
     /// Initialization
-    /// - Parameter networkService: network service
+    /// Creates the API service.
+    /// - Parameter networkService: Network service used for HTTP requests.
     init(networkService: NetworkService) {
         self.networkService = networkService
     }
 
+    /// Fetches raw news data from the Autodoc API.
+    /// - Parameter page: 1-based page number.
+    /// - Returns: Raw response DTO, or a network error.
     func fetch(page: Int) async -> Result<NewsResponseDTO, NetworkError> {
         let url = "\(Constants.baseURL)/\(page)/\(Constants.pageSize)"
         let endpoint = BaseNetworkEndPoint(baseURL: url)

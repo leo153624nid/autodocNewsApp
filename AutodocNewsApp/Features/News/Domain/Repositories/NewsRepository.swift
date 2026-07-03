@@ -7,8 +7,12 @@
 
 import Foundation
 
+/// Contract for accessing paginated news data.
 protocol NewsRepository {
     
+    /// Fetches a page of news articles.
+    /// - Parameter page: 1-based page number.
+    /// - Returns: Feed with items and total count, or a network error.
     func fetchNews(page: Int) async -> Result<NewsFeed, NetworkError>
     
 }

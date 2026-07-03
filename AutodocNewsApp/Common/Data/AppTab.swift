@@ -9,6 +9,8 @@ import Foundation
 
 /// Tabs of application tab bar.
 enum AppTab {
+    /// News feed tab.
     case news
+    /// App settings tab.
     case settings
 }
