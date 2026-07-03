@@ -11,6 +11,8 @@ final class NewsCell: UICollectionViewCell {
     
     static let reuseIdentifier = "NewsCell"
 
+    @InjectedLazy private var imageLoader: ImageLoader
+
     private var currentUrlString: String?
     private var imageTask: Task<Void, Never>?
 
@@ -121,17 +123,19 @@ final class NewsCell: UICollectionViewCell {
         placeholderIconView.isHidden = true
         imageSpinner.startAnimating()
         imageTask = Task { [weak self] in
-            let image = await ImageLoader.shared.loadImage(from: urlString)
+            guard let self else { return }
+            
+            let image = await imageLoader.loadImage(from: urlString)
 
             guard !Task.isCancelled,
-                  self?.currentUrlString == urlString else { return }
+                  currentUrlString == urlString else { return }
 
             await MainActor.run {
-                self?.imageSpinner.stopAnimating()
+                self.imageSpinner.stopAnimating()
                 if let image {
-                    self?.imageView.image = image
+                    self.imageView.image = image
                 } else {
-                    self?.placeholderIconView.isHidden = false
+                    self.placeholderIconView.isHidden = false
                 }
             }
         }

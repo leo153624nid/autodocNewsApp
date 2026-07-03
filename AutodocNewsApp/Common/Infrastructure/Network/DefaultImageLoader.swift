@@ -1,5 +1,5 @@
 //
-//  ImageLoader.swift
+//  DefaultImageLoader.swift
 //  AutodocNewsApp
 //
 //  Created by A Ch on 02.07.2026.
@@ -7,12 +7,11 @@
 
 import UIKit
 
-final class ImageLoader {
-    static let shared = ImageLoader() // TODO: DI
+final class DefaultImageLoader: ImageLoader {
 
     private let cache = NSCache<NSString, UIImage>()
 
-    private init() {
+    init() {
         cache.countLimit = 200
         cache.totalCostLimit = 100 * 1024 * 1024 // 100 MB
     }

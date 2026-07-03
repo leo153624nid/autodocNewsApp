@@ -219,6 +219,7 @@ final class NewsListViewController: UIViewController {
 
         case .loadingMore(let items):
             footerView?.startAnimating()
+            applySnapshot(items)
 
         case .error(let error):
             activityIndicator.stopAnimating()

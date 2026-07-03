@@ -102,6 +102,9 @@ extension DIContainer {
         register(type: NetworkService.self) { _ in
             DefaultNetworkService()
         }
+        register(type: ImageLoader.self) { _ in
+            DefaultImageLoader()
+        }
     }
     
     private func registerNewsFeature() {
