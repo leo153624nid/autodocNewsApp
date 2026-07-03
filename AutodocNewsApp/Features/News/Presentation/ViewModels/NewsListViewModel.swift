@@ -36,6 +36,7 @@ final class NewsListViewModel: ViewModel {
     private var currentPage = 1
     private var totalCount = 0
     private var allItems: [NewsItem] = []
+    private var fetchTask: Task<Void, Never>?
 
     private var canLoadMore: Bool {
         allItems.count < totalCount
@@ -58,7 +59,7 @@ final class NewsListViewModel: ViewModel {
                                        title: item.title)
 
         case .pullToRefresh:
-            refresh()
+            loadInitial()
 
         case .loadMore:
             loadNextPage()
@@ -69,6 +70,7 @@ final class NewsListViewModel: ViewModel {
 
         case .onDisappear:
             isViewAppeared = false
+            cancelFetch()
         }
     }
 
@@ -79,6 +81,7 @@ final class NewsListViewModel: ViewModel {
         allItems = []
         totalCount = 0
         state = .loading
+        
         fetch(page: currentPage)
     }
 
@@ -89,15 +92,27 @@ final class NewsListViewModel: ViewModel {
         fetch(page: currentPage)
     }
 
-    private func refresh() {
-        loadInitial()
+    private func cancelFetch() {
+        fetchTask?.cancel()
+        fetchTask = nil
+        switch state {
+        case .loading:
+            state = .idle
+        case .loadingMore(let existing):
+            state = .loaded(existing)
+        default:
+            break
+        }
     }
 
     private func fetch(page: Int) {
-        Task { [weak self] in
+        fetchTask?.cancel()
+        fetchTask = Task { [weak self] in
             guard let self else { return }
 
             let result = await newsRepository.fetchNews(page: page)
+
+            guard !Task.isCancelled else { return }
 
             switch result {
             case .success(let feed):

@@ -348,7 +348,7 @@ struct NewsListViewModelTests {
 
     // MARK: - onDisappear
 
-    @Test func onDisappear_doesNotAffectState() async {
+    @Test func onDisappear_afterLoaded_keepsLoadedState() async {
         let items = makeItems(count: 2)
         repository.stubbedResult = .success(makeFeed(items: items, totalCount: 2))
 
@@ -362,5 +362,58 @@ struct NewsListViewModelTests {
             return
         }
         #expect(loadedItems.count == 2)
+    }
+
+    @Test func onDisappear_whileLoading_resetsStateToIdle() async {
+        sut.perform(action: .onAppear)
+        // Task is queued but not started yet — disappear before it runs
+        sut.perform(action: .onDisappear)
+        await waitForTasks()
+
+        guard case .idle = sut.state else {
+            Issue.record("Expected .idle after cancelling during .loading, got \(sut.state)")
+            return
+        }
+    }
+
+    @Test func onDisappear_whileLoadingMore_resetsStateToLoadedWithExistingItems() async {
+        let page1Items = makeItems(count: 2)
+        repository.stubbedResult = .success(makeFeed(items: page1Items, totalCount: 10))
+
+        sut.perform(action: .onAppear)
+        await waitForTasks()
+
+        // Trigger loadMore so state becomes .loadingMore, then immediately disappear
+        sut.perform(action: .loadMore)
+        sut.perform(action: .onDisappear)
+        await waitForTasks()
+
+        guard case .loaded(let items) = sut.state else {
+            Issue.record("Expected .loaded with existing items after cancelling during .loadingMore, got \(sut.state)")
+            return
+        }
+        #expect(items.count == 2)
+        #expect(repository.fetchCallCount == 2)
+        #expect(repository.lastFetchedPage == 2)
+    }
+
+    @Test func onAppear_afterCancellationDuringInitialLoad_retriggersLoad() async {
+        let items = makeItems(count: 2)
+        repository.stubbedResult = .success(makeFeed(items: items, totalCount: 2))
+
+        sut.perform(action: .onAppear)
+        sut.perform(action: .onDisappear) // cancels, state -> .idle
+        await waitForTasks()
+
+        sut.perform(action: .onAppear)   // .idle again -> triggers loadInitial
+        await waitForTasks()
+
+        guard case .loaded(let loadedItems) = sut.state else {
+            Issue.record("Expected .loaded after re-appear, got \(sut.state)")
+            return
+        }
+        #expect(loadedItems.count == 2)
+        #expect(repository.fetchCallCount == 2)
+        #expect(repository.lastFetchedPage == 1)
     }
 }
