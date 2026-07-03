@@ -34,9 +34,9 @@ extension Date {
     /// Date string for display (Month Day or Today or Yesterday)
     func toSectionHeaderString() -> String {
         return if Calendar.current.isDateInToday(self) {
-            "Today" // TODO: localize
+            "date.today".localized
         } else if Calendar.current.isDateInYesterday(self) {
-            "Yesterday" // TODO: localize
+            "date.yesterday".localized
         } else {
             toDisplayString()
         }

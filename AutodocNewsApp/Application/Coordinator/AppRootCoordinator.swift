@@ -37,14 +37,14 @@ final class AppRootCoordinator: RootCoordinator {
 
         let newsNav = newsCoordinator.navigationController
         newsNav.tabBarItem = UITabBarItem(
-            title: "News", // TODO: localize
+            title: "tab.news".localized,
             image: UIImage(systemName: "newspaper"),
             selectedImage: UIImage(systemName: "newspaper.fill")
         )
 
         let settingsNav = settingsCoordinator.navigationController
         settingsNav.tabBarItem = UITabBarItem(
-            title: "Settings", // TODO: localize
+            title: "tab.settings".localized,
             image: UIImage(systemName: "gear"),
             selectedImage: UIImage(systemName: "gear.fill")
         )

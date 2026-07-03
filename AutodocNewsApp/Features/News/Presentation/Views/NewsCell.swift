@@ -78,7 +78,7 @@ final class NewsCell: UICollectionViewCell {
 
     func configure(with item: NewsItem) {
         titleLabel.text = item.title
-        dateLabel.text = item.publishedDate?.toSectionHeaderString() ?? "No date"
+        dateLabel.text = item.publishedDate?.toSectionHeaderString() ?? "news.cell.no_date".localized
 
         // Cancel any in-flight image load before starting a new one
         imageTask?.cancel()

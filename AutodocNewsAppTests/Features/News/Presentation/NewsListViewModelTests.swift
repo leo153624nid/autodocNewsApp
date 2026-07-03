@@ -5,10 +5,10 @@
 //  Created by A Ch on 03.07.2026.
 //
 
+@testable import AutodocNewsApp
 import Combine
 import Foundation
 import Testing
-@testable import AutodocNewsApp
 
 // MARK: - Mocks
 

@@ -1,0 +1,27 @@
+/* Tab bar */
+"tab.news" = "News";
+"tab.settings" = "Settings";
+
+/* Navigation titles */
+"screen.news.title" = "News";
+"screen.settings.title" = "Settings";
+
+/* Error alert */
+"error.alert.title" = "Error";
+
+/* Network errors */
+"error.something_went_wrong" = "Something went wrong";
+"error.no_internet_connection" = "No internet connection";
+"error.problem_with_connection" = "Problem with connection";
+"error.unknown" = "Unknown error";
+
+/* Alert actions */
+"alert.action.cancel" = "Cancel";
+"alert.action.retry" = "Retry";
+
+/* Date display */
+"date.today" = "Today";
+"date.yesterday" = "Yesterday";
+
+/* News cell */
+"news.cell.no_date" = "No date";

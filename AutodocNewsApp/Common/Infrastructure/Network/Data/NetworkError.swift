@@ -25,16 +25,16 @@ enum NetworkError: Error {
     case unknown
     
     /// localized description of error for user
-    var localizedDescription: String { // TODO: add localizable
+    var localizedDescription: String {
         return switch self {
         case .badRequest, .badResponse, .decodingFailed, .unAuthorized:
-            "Something went wrong"
+            "error.something_went_wrong".localized
         case .notConnectedToInternet:
-            "No internet connection"
+            "error.no_internet_connection".localized
         case .connectionError:
-            "Problem with connection"
+            "error.problem_with_connection".localized
         case .unknown:
-            "Unknown error"
+            "error.unknown".localized
         }
     }
 }

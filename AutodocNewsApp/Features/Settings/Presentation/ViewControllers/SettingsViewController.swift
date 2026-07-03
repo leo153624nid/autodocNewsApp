@@ -26,7 +26,7 @@ final class SettingsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Settings" // TODO: localize
+        title = "screen.settings.title".localized
         view.backgroundColor = .systemGroupedBackground
     }
 

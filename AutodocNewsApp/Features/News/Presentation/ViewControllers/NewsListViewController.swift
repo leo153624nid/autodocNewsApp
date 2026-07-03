@@ -75,7 +75,7 @@ final class NewsListViewController: UIViewController {
     // MARK: - Setup
 
     private func setupRootView() {
-        title = "News" // TODO: localize
+        title = "screen.news.title".localized
         view.backgroundColor = .systemGroupedBackground
     }
 
@@ -235,17 +235,18 @@ final class NewsListViewController: UIViewController {
         dataSource.apply(snapshot, animatingDifferences: true)
     }
 
-    private func showError(_ error: NetworkError) { // TODO: localize
+    private func showError(_ error: NetworkError) {
         let alert = UIAlertController(
-            title: "Error",
+            title: "error.alert.title".localized,
             message: error.localizedDescription,
             preferredStyle: .alert
         )
-        alert.addAction(UIAlertAction(title: "Retry",
+        alert.addAction(UIAlertAction(title: "alert.action.retry".localized,
                                       style: .default) { [weak self] _ in
             self?.viewModel.perform(action: .pullToRefresh)
         })
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        alert.addAction(UIAlertAction(title: "alert.action.cancel".localized,
+                                      style: .cancel))
         
         present(alert, animated: true)
     }
@@ -270,8 +271,8 @@ extension NewsListViewController: UICollectionViewDelegate {
         let offsetY = scrollView.contentOffset.y
         let contentHeight = scrollView.contentSize.height
         let frameHeight = scrollView.frame.height
+        
         // Trigger next page load when user is 200pt from the bottom
-
         if contentHeight > 0,
            offsetY > contentHeight - frameHeight - 200 {
             viewModel.perform(action: .loadMore)
