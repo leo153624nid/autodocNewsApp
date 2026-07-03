@@ -76,6 +76,7 @@ final class NewsListViewController: UIViewController {
 
     private func setupRootView() {
         title = "screen.news.title".localized
+        navigationItem.largeTitleDisplayMode = .always
         view.backgroundColor = .systemGroupedBackground
     }
 

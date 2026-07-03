@@ -27,12 +27,11 @@ final class NewsWebViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        view.backgroundColor = .systemBackground
-        
+
+        setupRootView()
         setupWebView()
         setupProgressView()
-        
+
         webView.load(URLRequest(url: url))
     }
 
@@ -41,6 +40,17 @@ final class NewsWebViewController: UIViewController {
     }
 
     // MARK: - Setup
+    
+    private func setupRootView() {
+        view.backgroundColor = .systemBackground
+        navigationItem.largeTitleDisplayMode = .never
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            image: UIImage(systemName: "arrow.clockwise"),
+            style: .plain,
+            target: self,
+            action: #selector(reloadPage)
+        )
+    }
 
     private func setupWebView() {
         webView = WKWebView()
@@ -74,6 +84,11 @@ final class NewsWebViewController: UIViewController {
                 self?.progressView.isHidden = progress >= 1.0
             }
         }
+    }
+
+    @objc private func reloadPage() {
+        progressView.setProgress(0, animated: false)
+        webView.reload()
     }
 
     deinit {
