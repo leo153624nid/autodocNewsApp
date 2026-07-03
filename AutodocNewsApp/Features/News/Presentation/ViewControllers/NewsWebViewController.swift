@@ -36,8 +36,13 @@ final class NewsWebViewController: UIViewController {
         setupRootView()
         setupWebView()
         setupProgressView()
+    }
 
-        webView.load(URLRequest(url: url))
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if webView.url == nil {
+            webView.load(URLRequest(url: url))
+        }
     }
 
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
@@ -58,8 +63,11 @@ final class NewsWebViewController: UIViewController {
     }
 
     private func setupWebView() {
-        webView = WKWebView()
+        webView = WKWebView(frame: view.bounds,
+                            configuration: WKWebViewConfiguration())
         webView.translatesAutoresizingMaskIntoConstraints = false
+        webView.navigationDelegate = self
+        webView.scrollView.contentInsetAdjustmentBehavior = .never
         view.addSubview(webView)
 
         NSLayoutConstraint.activate([
@@ -98,5 +106,21 @@ final class NewsWebViewController: UIViewController {
 
     deinit {
         progressObservation?.invalidate()
+    }
+}
+
+// MARK: - WKNavigationDelegate
+extension NewsWebViewController: WKNavigationDelegate {
+
+    func webView(_ webView: WKWebView,
+                 didFailProvisionalNavigation navigation: WKNavigation!,
+                 withError error: Error) {
+        progressView.isHidden = true
+    }
+
+    func webView(_ webView: WKWebView,
+                 didFail navigation: WKNavigation!,
+                 withError error: Error) {
+        progressView.isHidden = true
     }
 }

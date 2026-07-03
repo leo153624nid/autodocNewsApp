@@ -10,8 +10,6 @@ import Foundation
 /// Property wrapper for fast injection.
 ///
 ///     @Injected var networkService: NetworkService
-///
-/// Hint: don't use this type of injection.
 @propertyWrapper
 struct Injected<Service> {
     var wrappedValue: Service

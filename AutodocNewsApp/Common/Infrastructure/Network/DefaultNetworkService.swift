@@ -10,6 +10,7 @@ import Foundation
 
 /// Default implementation of network service.
 final class DefaultNetworkService: NetworkService {
+    
     /// Session for performing requests.
     private let urlSession: URLSession
     

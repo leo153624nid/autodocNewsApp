@@ -10,8 +10,6 @@ import Foundation
 /// Property wrapper for fast lazy injection.
 ///
 ///     @InjectedLazy var networkService: NetworkService
-///
-/// Hint: don't use this type of injection.
 @propertyWrapper
 struct InjectedLazy<Service> {
     lazy var wrappedValue: Service = {
