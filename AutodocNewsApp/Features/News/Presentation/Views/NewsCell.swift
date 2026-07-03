@@ -134,13 +134,11 @@ final class NewsCell: UICollectionViewCell {
             guard !Task.isCancelled,
                   currentUrlString == urlString else { return }
 
-            await MainActor.run {
-                self.imageSpinner.stopAnimating()
-                if let image {
-                    self.imageView.image = image
-                } else {
-                    self.placeholderIconView.isHidden = false
-                }
+            imageSpinner.stopAnimating()
+            if let image {
+                imageView.image = image
+            } else {
+                placeholderIconView.isHidden = false
             }
         }
     }

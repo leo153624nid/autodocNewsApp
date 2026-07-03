@@ -23,6 +23,7 @@ enum NewsListViewAction {
 }
 
 /// ViewModel for the news list screen.
+@MainActor
 final class NewsListViewModel: ViewModel {
 
     /// Coordinator that handles News navigation.

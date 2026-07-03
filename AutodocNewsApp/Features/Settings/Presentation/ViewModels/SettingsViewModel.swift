@@ -12,6 +12,7 @@ import Foundation
 enum SettingsViewAction {}
 
 /// ViewModel for the Settings screen.
+@MainActor
 final class SettingsViewModel: ViewModel {
 
     /// Coordinator that handles Settings navigation.
