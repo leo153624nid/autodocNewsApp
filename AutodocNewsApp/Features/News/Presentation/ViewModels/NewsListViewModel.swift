@@ -38,7 +38,7 @@ final class NewsListViewModel: ViewModel {
         /// Items available; no active request.
         case loaded([NewsItem])
         /// Next page loading while existing items are shown.
-        case loadingMore([NewsItem])
+        case loadingMore
         /// Request failed.
         case error(NetworkError)
     }
@@ -107,7 +107,7 @@ final class NewsListViewModel: ViewModel {
     private func loadNextPage() {
         guard case .loaded = state, canLoadMore else { return }
         
-        state = .loadingMore(allItems)
+        state = .loadingMore
         fetch(page: currentPage)
     }
 
@@ -117,8 +117,8 @@ final class NewsListViewModel: ViewModel {
         switch state {
         case .loading:
             state = .idle
-        case .loadingMore(let existing):
-            state = .loaded(existing)
+        case .loadingMore:
+            state = .loaded(allItems)
         default:
             break
         }
@@ -141,8 +141,8 @@ final class NewsListViewModel: ViewModel {
                 state = .loaded(allItems)
             case .failure(let error):
                 switch state {
-                case .loadingMore(let existing):
-                    state = .loaded(existing)
+                case .loadingMore:
+                    state = .loaded(allItems)
                 default:
                     state = .error(error)
                 }

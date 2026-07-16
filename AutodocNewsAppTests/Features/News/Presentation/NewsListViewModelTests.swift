@@ -191,11 +191,10 @@ struct NewsListViewModelTests {
 
         sut.perform(action: .loadMore)
 
-        guard case .loadingMore(let existingItems) = sut.state else {
+        guard case .loadingMore = sut.state else {
             Issue.record("Expected .loadingMore synchronously after loadMore, got \(sut.state)")
             return
         }
-        #expect(existingItems.count == 2)
     }
 
     @Test func loadMore_whenLoadedAndHasMore_fetchesNextPage() async {

@@ -29,6 +29,7 @@ final class NewsListViewController: UIViewController {
 
     @InjectedLazy private var imageLoader: ImageLoader
     private var prefetchTasks: [IndexPath: Task<Void, Never>] = [:]
+    private var totalItemCount = 0
 
     // MARK: - Initialization
 
@@ -73,6 +74,7 @@ final class NewsListViewController: UIViewController {
         super.viewWillTransition(to: size, with: coordinator)
         coordinator.animate { [weak self] _ in
             self?.collectionView.collectionViewLayout.invalidateLayout()
+            self?.cancelAllPrefetchTasks()
         }
     }
 
@@ -214,6 +216,7 @@ final class NewsListViewController: UIViewController {
             break
 
         case .loading:
+            cancelAllPrefetchTasks()
             activityIndicator.startAnimating()
 
         case .loaded(let items):
@@ -222,9 +225,8 @@ final class NewsListViewController: UIViewController {
             footerView?.stopAnimating()
             applySnapshot(items)
 
-        case .loadingMore(let items):
+        case .loadingMore:
             footerView?.startAnimating()
-            applySnapshot(items)
 
         case .error(let error):
             activityIndicator.stopAnimating()
@@ -235,10 +237,16 @@ final class NewsListViewController: UIViewController {
     }
 
     private func applySnapshot(_ items: [NewsItem]) {
+        totalItemCount = items.count
         var snapshot = NSDiffableDataSourceSnapshot<Section, NewsItem>()
         snapshot.appendSections([.main])
         snapshot.appendItems(items, toSection: .main)
         dataSource.apply(snapshot, animatingDifferences: true)
+    }
+
+    private func cancelAllPrefetchTasks() {
+        prefetchTasks.values.forEach { $0.cancel() }
+        prefetchTasks.removeAll()
     }
 
     private func showError(_ error: NetworkError) {
@@ -276,9 +284,8 @@ extension NewsListViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView,
                         willDisplay cell: UICollectionViewCell,
                         forItemAt indexPath: IndexPath) {
-        let totalItems = dataSource.snapshot().numberOfItems(inSection: .main)
-        guard totalItems > 0,
-              indexPath.item >= totalItems - Constants.prefetchThreshold else { return }
+        guard totalItemCount > 0,
+              indexPath.item >= totalItemCount - Constants.prefetchThreshold else { return }
         viewModel.perform(action: .loadMore)
     }
 
@@ -289,11 +296,8 @@ extension NewsListViewController: UICollectionViewDataSourcePrefetching {
 
     func collectionView(_ collectionView: UICollectionView,
                         prefetchItemsAt indexPaths: [IndexPath]) {
-        let items = dataSource.snapshot().itemIdentifiers(inSection: .main)
-
         for indexPath in indexPaths {
-            guard indexPath.item < items.count,
-                  let urlString = items[indexPath.item].titleImageUrl,
+            guard let urlString = dataSource.itemIdentifier(for: indexPath)?.titleImageUrl,
                   !urlString.isEmpty else { continue }
 
             prefetchTasks[indexPath] = Task { [weak self] in
