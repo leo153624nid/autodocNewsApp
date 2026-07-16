@@ -27,6 +27,9 @@ final class NewsListViewController: UIViewController {
     private let refreshControl = UIRefreshControl()
     private weak var footerView: LoadingFooterView?
 
+    @InjectedLazy private var imageLoader: ImageLoader
+    private var prefetchTasks: [IndexPath: Task<Void, Never>] = [:]
+
     // MARK: - Initialization
 
     init(viewModel: NewsListViewModel) {
@@ -86,6 +89,7 @@ final class NewsListViewController: UIViewController {
                                           collectionViewLayout: makeLayout())
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.delegate = self
+        collectionView.prefetchDataSource = self
         collectionView.backgroundColor = .clear
         collectionView.register(NewsCell.self,
                                 forCellWithReuseIdentifier: NewsCell.reuseIdentifier)
@@ -263,21 +267,46 @@ extension NewsListViewController: UICollectionViewDelegate {
 
     func collectionView(_ collectionView: UICollectionView,
                         didSelectItemAt indexPath: IndexPath) {
-        
+
         collectionView.deselectItem(at: indexPath, animated: true)
         guard let item = dataSource.itemIdentifier(for: indexPath) else { return }
         viewModel.perform(action: .selectItem(item))
     }
 
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let offsetY = scrollView.contentOffset.y
-        let contentHeight = scrollView.contentSize.height
-        let frameHeight = scrollView.frame.height
-        
-        // Trigger next page load when user is 200pt from the bottom
-        if contentHeight > 0,
-           offsetY > contentHeight - frameHeight - 200 {
-            viewModel.perform(action: .loadMore)
+    func collectionView(_ collectionView: UICollectionView,
+                        willDisplay cell: UICollectionViewCell,
+                        forItemAt indexPath: IndexPath) {
+        let totalItems = dataSource.snapshot().numberOfItems(inSection: .main)
+        guard totalItems > 0,
+              indexPath.item >= totalItems - Constants.prefetchThreshold else { return }
+        viewModel.perform(action: .loadMore)
+    }
+
+}
+
+// MARK: - UICollectionViewDataSourcePrefetching
+extension NewsListViewController: UICollectionViewDataSourcePrefetching {
+
+    func collectionView(_ collectionView: UICollectionView,
+                        prefetchItemsAt indexPaths: [IndexPath]) {
+        let items = dataSource.snapshot().itemIdentifiers(inSection: .main)
+
+        for indexPath in indexPaths {
+            guard indexPath.item < items.count,
+                  let urlString = items[indexPath.item].titleImageUrl,
+                  !urlString.isEmpty else { continue }
+
+            prefetchTasks[indexPath] = Task { [weak self] in
+                guard let self else { return }
+                _ = await imageLoader.loadImage(from: urlString)
+            }
+        }
+    }
+
+    func collectionView(_ collectionView: UICollectionView,
+                        cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
+        for indexPath in indexPaths {
+            prefetchTasks.removeValue(forKey: indexPath)?.cancel()
         }
     }
 }
@@ -293,5 +322,6 @@ private extension NewsListViewController {
         static let cellEstimateHeight: CGFloat = 220
         static let cellPadding: CGFloat = 6
         static let widthTarget: CGFloat = 600
+        static let prefetchThreshold = 3
     }
 }
