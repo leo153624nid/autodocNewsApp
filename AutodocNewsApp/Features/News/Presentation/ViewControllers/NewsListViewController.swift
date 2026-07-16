@@ -121,8 +121,10 @@ final class NewsListViewController: UIViewController {
             let cellPadding = Constants.cellPadding
             let sectionPadding = Constants.cellPadding * 2
             let availableWidth = environment.container.effectiveContentSize.width
-            // 3 columns on wide screens (iPad), 2 on narrow (iPhone)
-            let columns: Int = availableWidth > Constants.widthTarget ? 3 : 2
+            let traits = environment.traitCollection
+            // 3 columns: iPad (hSize regular) or iPhone landscape (vSize compact)
+            let columns: Int = traits.horizontalSizeClass == .regular
+                               || traits.verticalSizeClass == .compact ? 3 : 2
             let columnsF = CGFloat(columns)
 
             let totalInterItemSpacing = cellPadding * 2 * (columnsF - 1)
@@ -325,7 +327,6 @@ private extension NewsListViewController {
     struct Constants {
         static let cellEstimateHeight: CGFloat = 220
         static let cellPadding: CGFloat = 6
-        static let widthTarget: CGFloat = 600
         static let prefetchThreshold = 3
     }
 }
