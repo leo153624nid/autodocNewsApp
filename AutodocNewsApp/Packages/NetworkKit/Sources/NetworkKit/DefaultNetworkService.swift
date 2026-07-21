@@ -49,8 +49,10 @@ public class DefaultNetworkService: NetworkService {
         return request
     }
 
-    public func performRequest<T: Decodable>(endpoint: NetworkEndPoint,
-                                             resultHandler: @escaping (Result<T, NetworkError>) -> Void) {
+    public func performRequest<T: Decodable & Sendable>(
+        endpoint: NetworkEndPoint,
+        resultHandler: @escaping @Sendable (Result<T, NetworkError>) -> Void
+    ) {
         guard let request = request(from: endpoint) else {
             resultHandler(.failure(.badRequest))
             return
@@ -79,7 +81,7 @@ public class DefaultNetworkService: NetworkService {
         dataTask.resume()
     }
 
-    public func performRequest<T: Decodable>(endpoint: NetworkEndPoint) async throws(NetworkError) -> T {
+    public func performRequest<T: Decodable & Sendable>(endpoint: NetworkEndPoint) async throws(NetworkError) -> T {
         guard let request = request(from: endpoint) else {
             throw .badRequest
         }
@@ -100,10 +102,9 @@ public class DefaultNetworkService: NetworkService {
         }
     }
 
-    public func performRequest<T: Decodable>(
-        endpoint: NetworkEndPoint) throws(NetworkError
-        ) -> AnyPublisher<T, NetworkError> {
-        
+    public func performRequest<T: Decodable & Sendable>(
+        endpoint: NetworkEndPoint
+    ) throws(NetworkError) -> AnyPublisher<T, NetworkError> {
         guard let request = request(from: endpoint) else {
             throw .badRequest
         }
@@ -129,7 +130,7 @@ public class DefaultNetworkService: NetworkService {
     }
 
     public func performRequest(endpoint: NetworkEndPoint,
-                               resultHandler: @escaping (Result<Data, NetworkError>) -> Void) {
+                               resultHandler: @escaping @Sendable (Result<Data, NetworkError>) -> Void) {
         guard let request = request(from: endpoint) else {
             resultHandler(.failure(.badRequest))
             return
