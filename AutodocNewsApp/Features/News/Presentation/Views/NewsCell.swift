@@ -5,6 +5,7 @@
 //  Created by A Ch on 02.07.2026.
 //
 
+import NetworkKit
 import UIKit
 
 /// Collection view cell that shows a news article thumbnail, title, and date.

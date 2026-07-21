@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		5CCB4423300F5BE5008092A1 /* NetworkKit in Frameworks */ = {isa = PBXBuildFile; productRef = 5CCB4422300F5BE5008092A1 /* NetworkKit */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		5C2FDA0B2FF631B100EF888F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5CCB4423300F5BE5008092A1 /* NetworkKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -70,6 +75,7 @@
 			children = (
 				5C2FD9F62FF631AF00EF888F /* AutodocNewsApp */,
 				5C2FDA0D2FF631B100EF888F /* AutodocNewsAppTests */,
+				5CCB4421300F5BE5008092A1 /* Frameworks */,
 				5C2FD9F52FF631AF00EF888F /* Products */,
 			);
 			sourceTree = "<group>";
@@ -81,6 +87,13 @@
 				5C2FDA0A2FF631B100EF888F /* AutodocNewsAppTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		5CCB4421300F5BE5008092A1 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -104,6 +117,7 @@
 			);
 			name = AutodocNewsApp;
 			packageProductDependencies = (
+				5CCB4422300F5BE5008092A1 /* NetworkKit */,
 			);
 			productName = AutodocNewsApp;
 			productReference = 5C2FD9F42FF631AF00EF888F /* AutodocNewsApp.app */;
@@ -163,6 +177,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				5C2FDB1D2FF647DD00EF888F /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */,
+				5C90DDF2300F564E000CB9F0 /* XCLocalSwiftPackageReference "AutodocNewsApp/Packages/NetworkKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 5C2FD9F52FF631AF00EF888F /* Products */;
@@ -491,6 +506,13 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		5C90DDF2300F564E000CB9F0 /* XCLocalSwiftPackageReference "AutodocNewsApp/Packages/NetworkKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = AutodocNewsApp/Packages/NetworkKit;
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCRemoteSwiftPackageReference section */
 		5C2FDB1D2FF647DD00EF888F /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -512,6 +534,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 5C2FDB1D2FF647DD00EF888F /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */;
 			productName = "plugin:SwiftLintBuildToolPlugin";
+		};
+		5CCB4422300F5BE5008092A1 /* NetworkKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5C90DDF2300F564E000CB9F0 /* XCLocalSwiftPackageReference "AutodocNewsApp/Packages/NetworkKit" */;
+			productName = NetworkKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

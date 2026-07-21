@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import NetworkKit
 
 /// Concrete NewsAPI implementation backed by NetworkService.
 final class NewsAPIService: NewsAPI {

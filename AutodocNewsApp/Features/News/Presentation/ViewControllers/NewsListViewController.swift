@@ -6,6 +6,7 @@
 //
 
 import Combine
+import NetworkKit
 import UIKit
 
 /// View controller that displays the paginated news grid.

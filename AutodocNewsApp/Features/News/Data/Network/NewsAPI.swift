@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import NetworkKit
 
 /// Remote news data source contract.
 protocol NewsAPI {

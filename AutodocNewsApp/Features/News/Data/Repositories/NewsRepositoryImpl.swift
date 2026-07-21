@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import NetworkKit
 
 /// Default NewsRepository that maps DTOs to domain models.
 final class NewsRepositoryImpl: NewsRepository {

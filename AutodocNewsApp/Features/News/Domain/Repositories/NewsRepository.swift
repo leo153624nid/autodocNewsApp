@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import NetworkKit
 
 /// Contract for accessing paginated news data.
 protocol NewsRepository {

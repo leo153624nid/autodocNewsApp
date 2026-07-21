@@ -7,6 +7,7 @@
 
 import Combine
 import Foundation
+import NetworkKit
 
 /// Actions from NewsList view.
 enum NewsListViewAction {
