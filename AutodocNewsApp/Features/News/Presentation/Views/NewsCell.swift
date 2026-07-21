@@ -10,9 +10,6 @@ import UIKit
 /// Collection view cell that shows a news article thumbnail, title, and date.
 final class NewsCell: UICollectionViewCell {
 
-    /// Reuse identifier for dequeuing.
-    static let reuseIdentifier = "NewsCell"
-
     @InjectedLazy private var imageLoader: ImageLoader
 
     private var currentUrlString: String?

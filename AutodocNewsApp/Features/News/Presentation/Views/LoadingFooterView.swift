@@ -10,9 +10,6 @@ import UIKit
 /// Collection view footer that shows a loading spinner during pagination.
 final class LoadingFooterView: UICollectionReusableView {
 
-    /// Reuse identifier for dequeuing.
-    static let reuseIdentifier = "LoadingFooterView"
-
     private let spinner: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(style: .medium)
         indicator.hidesWhenStopped = true

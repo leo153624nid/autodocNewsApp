@@ -72,10 +72,7 @@ final class NewsListViewController: UIViewController {
     override func viewWillTransition(to size: CGSize,
                                      with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        coordinator.animate { [weak self] _ in
-            self?.collectionView.collectionViewLayout.invalidateLayout()
-            self?.cancelAllPrefetchTasks()
-        }
+        cancelAllPrefetchTasks()
     }
 
     // MARK: - Setup
@@ -93,11 +90,6 @@ final class NewsListViewController: UIViewController {
         collectionView.delegate = self
         collectionView.prefetchDataSource = self
         collectionView.backgroundColor = .clear
-        collectionView.register(NewsCell.self,
-                                forCellWithReuseIdentifier: NewsCell.reuseIdentifier)
-        collectionView.register(LoadingFooterView.self,
-                                forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
-                                withReuseIdentifier: LoadingFooterView.reuseIdentifier)
 
         refreshControl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
         collectionView.refreshControl = refreshControl
@@ -172,32 +164,27 @@ final class NewsListViewController: UIViewController {
     }
 
     private func setupDataSource() {
+        let cellRegistration = UICollectionView.CellRegistration<NewsCell, NewsItem> { cell, _, item in
+            cell.configure(with: item)
+        }
+
+        let footerRegistration = UICollectionView.SupplementaryRegistration<LoadingFooterView>(
+            elementKind: UICollectionView.elementKindSectionFooter
+        ) { [weak self] footer, _, _ in
+            self?.footerView = footer
+        }
+
         dataSource = UICollectionViewDiffableDataSource<Section, NewsItem>(
             collectionView: collectionView
         ) { collectionView, indexPath, item in
-
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NewsCell.reuseIdentifier,
-                                                          for: indexPath) as? NewsCell
-
-            guard let cell else {
-                return UICollectionViewCell()
-            }
-
-            cell.configure(with: item)
-            return cell
+            collectionView.dequeueConfiguredReusableCell(using: cellRegistration,
+                                                         for: indexPath,
+                                                         item: item)
         }
 
-        dataSource.supplementaryViewProvider = { [weak self] collectionView, kind, indexPath in
-            guard kind == UICollectionView.elementKindSectionFooter else { return nil }
-
-            let footer = collectionView.dequeueReusableSupplementaryView(
-                ofKind: kind,
-                withReuseIdentifier: LoadingFooterView.reuseIdentifier,
-                for: indexPath
-            ) as? LoadingFooterView
-            self?.footerView = footer
-
-            return footer
+        dataSource.supplementaryViewProvider = { collectionView, _, indexPath in
+            collectionView.dequeueConfiguredReusableSupplementary(using: footerRegistration,
+                                                                  for: indexPath)
         }
     }
 
